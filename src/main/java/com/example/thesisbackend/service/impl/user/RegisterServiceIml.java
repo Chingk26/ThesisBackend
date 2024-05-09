@@ -61,7 +61,11 @@ public class RegisterServiceIml implements RegisterService {
 
         //特判完毕，开始逻辑处理
         String encodedPassword = passwordEncoder.encode(password);
-        User user = new User(null,name,encodedPassword, 0, 1);
+        User user = new User();
+        user.setUsername(name);
+        user.setPassword(encodedPassword);
+        user.setAuthority(0);
+        user.setAccess(1);
         userMapper.insert(user);
         map.put("error_message","success");
         map.put("uid", user.getUid().toString());

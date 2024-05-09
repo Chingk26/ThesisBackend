@@ -66,7 +66,7 @@ public class UpdateServiceImpl implements UpdateService {
         }
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            map.put("error_message", "用户不存在");
+            map.put("error_message", "密码错误");
             return map;
         }
 

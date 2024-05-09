@@ -9,15 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Application {
     @TableId(type = IdType.AUTO)
-    private Integer uid;
+    private Integer application_id;
+    private Integer student_id;
     private Integer teacher_id;
-    private String username;
-    private String password;
-    private Integer authority;
-    private Integer access;
-    private String progress;
-    private String quality;
-    private String opinion;
+    private Integer teacher_pass;
+    private String content;
 }
