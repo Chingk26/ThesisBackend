@@ -1,0 +1,52 @@
+package com.example.thesisbackend.controller.user;
+
+import com.alibaba.fastjson.JSONObject;
+import com.example.thesisbackend.service.user.manage.UserManageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api")
+public class UserManageController {
+    @Autowired
+    private UserManageService userManageService;
+
+    @PostMapping("/user/ban")
+    public Map<String,String> banUser(@RequestParam Map<String,String> map){
+        int uid = Integer.parseInt(map.get("uid"));
+        return userManageService.banUser(uid);
+    }
+
+    @PostMapping("/user/unban")
+    public Map<String, String> unbanUser(@RequestParam Map<String,String> map){
+        int uid = Integer.parseInt(map.get("uid"));
+        return userManageService.unbanUser(uid);
+    }
+
+    @PostMapping("/user/edit")
+    public Map<String, String>editUser(@RequestParam Map<String, String> map) {
+        int uid = Integer.parseInt(map.get("uid"));
+        String username = map.get("username");
+        String password = map.get("password");
+        int authority = Integer.parseInt(map.get("authority"));
+        return userManageService.editUser(uid, username, password, authority);
+    }
+
+    @GetMapping("/user/getall")
+    public JSONObject getUserList(@RequestParam Map<String, String> map){
+        String name = map.get("key");
+        if (name == null) name = "";
+        int page = Integer.parseInt(map.get("page"));
+        int pageSize = Integer.parseInt(map.get("pageSize"));
+        int authority = -1;
+        String authority_string = map.get("authority");
+        if (authority_string != null)
+            authority = Integer.parseInt(authority_string);
+        return userManageService.getUserList(name, authority, page, pageSize);
+    }
+
+
+
+}
