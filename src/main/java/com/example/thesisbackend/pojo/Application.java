@@ -15,5 +15,5 @@ public class Application {
     private Integer student_id;
     private Integer teacher_id;
     private Integer teacher_pass;
-    private String content;
+    private byte[] content;
 }
