@@ -6,6 +6,7 @@ import com.example.thesisbackend.mapper.ApplicationMapper;
 import com.example.thesisbackend.mapper.UserMapper;
 import com.example.thesisbackend.pojo.Application;
 import com.example.thesisbackend.service.application.ApplicationService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,18 +57,24 @@ public class ApplicationServiceImpl implements ApplicationService {
             return map;
         }
         Application application=new Application();
-        application.setStudent_id(studentId);
-        application.setTeacher_id(teacherId);
+        application.setStudentId(studentId);
+        application.setTeacherId(teacherId);
         applicationMapper.insert(application);
         map.put("error_message", "success");
-        map.put("application_id", String.valueOf(application.getApplication_id()));
+        map.put("application_id", String.valueOf(application.getApplicationId()));
         return map;
     }
 
     @Override
-    public Map<String, String> uploadPdf(Integer application_id,MultipartFile file) {
+    public Map<String, String> uploadPdf(Integer application_id,MultipartFile file, HttpServletRequest request) {
+        try {
+            request.setCharacterEncoding("UTF-8");
+        }catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
         Map<String,String> map = new HashMap<>();
         String filename = file.getOriginalFilename();
+        String prename=filename.substring(0,filename.lastIndexOf("."));
         // 文件是否为空
         if (StringUtils.isEmpty(filename)) {
             map.put("error_message", "文件名为空");
@@ -79,16 +86,18 @@ public class ApplicationServiceImpl implements ApplicationService {
             map.put("error_message", "上传的文件非PDF格式");
             return map;
         }
-        //限制上传文件大小最大为16M
-        if (file.getSize() > 16777215) { //16M
-            map.put("error_message", "上传的PDF文件大于16M");
+        //限制上传文件大小最大为10M
+        if (file.getSize() > 10485760) { //10M
+            map.put("error_message", "上传的PDF文件大于10M");
             return map;
         }
 
         try {
             byte[] bytes = file.getBytes();
+            // 数据库已有数据进行修改
             Application application=applicationMapper.selectById(application_id);
             application.setContent(bytes);
+            application.setTitle(prename);
             //使用mybatisPlus的BaseMapper，修改数据库的data，把pdf已bytes的形式存入数据库
             applicationMapper.updateById(application);
         }catch (IOException e) {
@@ -100,16 +109,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public void read(Integer applicationId, HttpServletResponse response) throws IOException {
-        String filename = URLEncoder.encode("PDF" ,"UTF-8");
+        Application application = applicationMapper.selectById(applicationId);
         response.setContentType("application/pdf");
-        response.setHeader("filename",""+ filename + ".pdf");
-        response.addHeader("Access-Control-Expose-Headers", "filename");
-
-        // 获取数据库中的二进制数据
-        QueryWrapper<Application> queryWrapper = new QueryWrapper<Application>() //利用mybatisPlus按id查询
-                .eq("applicationId",applicationId);
-        Application application = applicationMapper.selectOne(queryWrapper);
-
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + application.getTitle() + ".pdf" + "\"");
         ByteArrayInputStream in = new ByteArrayInputStream(application.getContent());
         OutputStream out = response.getOutputStream();
         byte[] bytes = new byte[1024];

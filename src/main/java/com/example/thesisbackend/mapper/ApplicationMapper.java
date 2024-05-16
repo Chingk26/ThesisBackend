@@ -20,4 +20,7 @@ public interface ApplicationMapper extends BaseMapper<Application> {
     @Select("select * from application where student_id=#{studentId} and teacher_pass=#{teacherPass}")
     List<Application> selectBySP(Integer studentId, Integer teacherPass);
 
+    @Update("update application set content=#{bytes} where application_id=#{applicationId};")
+    int updateContentById(byte[] bytes,Integer applicationId);
+
 }

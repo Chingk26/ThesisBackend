@@ -1,6 +1,7 @@
 package com.example.thesisbackend.controller.application;
 
 import com.example.thesisbackend.service.application.ApplicationService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,8 @@ public class ApplicationController {
     }
 
     @PostMapping("/application/uploadPdf")
-    public Map<String, String> uploadPdf(@RequestParam("file") MultipartFile file,@RequestParam("application_id") Integer application_id) {
-        return applicationService.uploadPdf(application_id,file);
+    public Map<String, String> uploadPdf(@RequestParam("application_id") Integer application_id, @RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        return applicationService.uploadPdf(application_id,file,request);
     }
 
     @GetMapping(
