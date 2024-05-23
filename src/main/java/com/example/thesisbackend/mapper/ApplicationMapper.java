@@ -23,4 +23,9 @@ public interface ApplicationMapper extends BaseMapper<Application> {
     @Update("update application set content=#{bytes} where application_id=#{applicationId};")
     int updateContentById(byte[] bytes,Integer applicationId);
 
+    @Select("select * from application where teacher_id=#{teacherId};")
+    List<Application> selectByTeacher(Integer teacherId);
+
+    @Select("select * from application where teacher_pass=#{teacherPass}")
+    List<Application> selectByPass(Integer teacherPass);
 }

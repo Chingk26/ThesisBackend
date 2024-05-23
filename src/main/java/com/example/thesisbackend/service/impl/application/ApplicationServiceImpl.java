@@ -3,8 +3,10 @@ package com.example.thesisbackend.service.impl.application;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.example.thesisbackend.mapper.ApplicationMapper;
+import com.example.thesisbackend.mapper.TeacherMapper;
 import com.example.thesisbackend.mapper.UserMapper;
 import com.example.thesisbackend.pojo.Application;
+import com.example.thesisbackend.pojo.User;
 import com.example.thesisbackend.service.application.ApplicationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,6 +27,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     private ApplicationMapper applicationMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private TeacherMapper teacherMapper;
     @Override
     public Map<String, String> addApplication(Integer studentId, Integer teacherId) {
         Map<String,String> map = new HashMap<>();
@@ -54,6 +58,10 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
         if(applicationMapper.selectBySP(studentId,0).size()!=0||applicationMapper.selectBySP(studentId,1).size()!=0){
             map.put("error_message","您已提交过申请,请勿重复提交");
+            return map;
+        }
+        if(teacherMapper.countStuByT(teacherId)>=6){
+            map.put("error_message","该导师学员已满");
             return map;
         }
         Application application=new Application();
@@ -122,4 +130,41 @@ public class ApplicationServiceImpl implements ApplicationService {
         in.close();
         out.close();
     }
+
+    @Override
+    public Map<String, String> passApplication(Integer applicationId) {
+        Map<String,String> map = new HashMap<>();
+        if(applicationMapper.selectById(applicationId)==null) {
+            map.put("error_message","没有这个申请");
+            return map;
+        }
+        if(teacherMapper.countStuByT(applicationMapper.selectById(applicationId).getTeacherId())>=6){
+            map.put("error_message","您的学员已满，其他申请将为您自动拒绝");
+            List<Application> applicationList=applicationMapper.selectByPass(0);
+            for(Application application:applicationList){
+                application.setTeacherPass(2);
+                applicationMapper.updateById(application);
+            }
+            return map;
+        }
+        Application application=applicationMapper.selectById(applicationId);
+        application.setTeacherPass(1);
+        applicationMapper.updateById(application);
+        User student=userMapper.selectById(application.getStudentId());
+        student.setTeacherId(application.getTeacherId());
+        userMapper.updateById(student);
+        map.put("error_message", "success");
+        return map;
+    }
+
+    @Override
+    public Map<String, String> refuseApplication(Integer applicationId) {
+        Map<String,String> map = new HashMap<>();
+        Application application=applicationMapper.selectById(applicationId);
+        application.setTeacherPass(2);
+        applicationMapper.updateById(application);
+        map.put("error_message", "success");
+        return map;
+    }
+
 }

@@ -14,4 +14,9 @@ public interface ApplicationService {
 
 
     void read(Integer applicationId, HttpServletResponse response) throws IOException;
+
+    Map<String, String> passApplication(Integer applicationId);
+
+    Map<String, String> refuseApplication(Integer applicationId);
+
 }
