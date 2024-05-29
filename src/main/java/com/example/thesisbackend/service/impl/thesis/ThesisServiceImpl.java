@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.example.thesisbackend.mapper.ApplicationMapper;
 import com.example.thesisbackend.mapper.TeacherMapper;
 import com.example.thesisbackend.mapper.ThesisMapper;
+import com.example.thesisbackend.mapper.UserMapper;
 import com.example.thesisbackend.pojo.Application;
 import com.example.thesisbackend.pojo.Thesis;
 import com.example.thesisbackend.pojo.User;
@@ -26,12 +27,18 @@ import java.util.Map;
 public class ThesisServiceImpl implements ThesisService {
     @Autowired
     private ThesisMapper thesisMapper;
+    @Autowired
+    private UserMapper userMapper;
     @Override
-    public Map<String, String> addThesis(Integer studentId, Integer teacherId, String result) {
+    public Map<String, String> addThesis(Integer studentId, String result) {
         Map<String,String> map = new HashMap<>();
         Thesis thesis=new Thesis();
         thesis.setStudentId(studentId);
-        thesis.setTeacherId(teacherId);
+        if(userMapper.selectById(studentId).getTeacherId()==null){
+            map.put("error_message", "您还没有导师，请先进行导师申请");
+            return map;
+        }
+        thesis.setTeacherId(userMapper.selectById(studentId).getTeacherId());
         thesis.setResult(result);
         thesisMapper.insert(thesis);
         map.put("error_message", "success");
@@ -97,27 +104,4 @@ public class ThesisServiceImpl implements ThesisService {
         out.close();
     }
 
-    @Override
-    public Map<String, String> passThesisByTeacher(Integer thesisId) {
-        Map<String,String> map = new HashMap<>();
-        if(thesisMapper.selectById(thesisId)==null) {
-            map.put("error_message","没有这个申请");
-            return map;
-        }
-        Thesis thesis=thesisMapper.selectById(thesisId);
-        thesis.setTeacherPass(1);
-        thesisMapper.updateById(thesis);
-        map.put("error_message", "success");
-        return map;
-    }
-
-    @Override
-    public Map<String, String> refuseThesisByTeacher(Integer thesisId) {
-        Map<String,String> map = new HashMap<>();
-        Thesis thesis=thesisMapper.selectById(thesisId);
-        thesis.setTeacherPass(2);
-        thesisMapper.updateById(thesis);
-        map.put("error_message", "success");
-        return map;
-    }
 }

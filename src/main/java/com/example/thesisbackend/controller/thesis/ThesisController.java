@@ -20,9 +20,8 @@ public class ThesisController {
     @PostMapping("/thesis/add")
     public Map<String,String> addThesis(@RequestParam Map<String,String> map){
         Integer student_id = Integer.valueOf(map.get("student_id"));
-        Integer teacher_id = Integer.valueOf(map.get("teacher_id"));
         String result=map.get("result");
-        return thesisService.addThesis(student_id,teacher_id,result);
+        return thesisService.addThesis(student_id,result);
     }
 
     @PostMapping("/thesis/uploadPdf")
@@ -39,15 +38,4 @@ public class ThesisController {
         thesisService.read(thesis_id,response);
     }
 
-    @PostMapping("/thesis/pass")
-    public Map<String,String> passThesisByTeacher(@RequestParam Map<String,String> map){
-        Integer thesis_id = Integer.valueOf(map.get("thesis_id"));
-        return thesisService.passThesisByTeacher(thesis_id);
-    }
-
-    @PostMapping("/thesis/refuse")
-    public Map<String,String> refuseThesisByTeacher(@RequestParam Map<String,String> map){
-        Integer thesis_id = Integer.valueOf(map.get("thesis_id"));
-        return thesisService.refuseThesisByTeacher(thesis_id);
-    }
 }
