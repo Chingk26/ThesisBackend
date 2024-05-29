@@ -1,4 +1,4 @@
-package com.example.thesisbackend.model;
+package com.example.thesisbackend.pojo;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

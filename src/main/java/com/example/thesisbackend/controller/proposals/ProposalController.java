@@ -1,10 +1,13 @@
 package com.example.thesisbackend.controller.proposals;
 
+import com.example.thesisbackend.pojo.Proposal;
 import com.example.thesisbackend.service.proposals.ProposalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/proposals")

@@ -17,7 +17,4 @@ public class User {
     private String password;
     private Integer authority;
     private Integer access;
-    private String progress;
-    private String quality;
-    private String opinion;
 }
