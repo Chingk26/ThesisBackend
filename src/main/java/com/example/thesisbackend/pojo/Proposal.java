@@ -29,10 +29,9 @@ import java.util.Date;
 @AllArgsConstructor
 public class Proposal {
     @TableId(type = IdType.AUTO)
-    private Integer Id;
+    private Integer proposalId;
     private Integer studentId;
     private Integer teacherId;
-    private Date submissionDate;
     private Integer teacherPass;
     private Integer deanPass;
     private byte[] content;

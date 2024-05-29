@@ -28,16 +28,16 @@ public class ProposalController {
         return new ResponseEntity<>(proposals, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> deleteProposal(@PathVariable Integer id) {
-        proposalService.deleteProposal(id);
-        return new ResponseEntity<>(Map.of("error", "success"), HttpStatus.OK);
+    @DeleteMapping("/{proposalId}")
+    public ResponseEntity<Map<String, String>> deleteProposal(@PathVariable Integer proposalId) {
+        proposalService.deleteProposal(proposalId);
+        return new ResponseEntity<>(Map.of("error_message", "success"), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Proposal> updateProposal(@PathVariable Integer id,
+    @PutMapping("/{proposalId}")
+    public ResponseEntity<Proposal> updateProposal(@PathVariable Integer proposalId,
                                                    @RequestBody Proposal proposal) {
-        Proposal updatedProposal = proposalService.updateProposal(id, proposal);
+        Proposal updatedProposal = proposalService.updateProposal(proposalId, proposal);
         return new ResponseEntity<>(updatedProposal, HttpStatus.OK);
     }
 

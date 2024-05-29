@@ -28,13 +28,13 @@ public class ProposalServiceImpl implements ProposalService {
     }
 
     @Override
-    public void deleteProposal(Integer id) {
-        proposalMapper.deleteById(id);
+    public void deleteProposal(Integer proposalId) {
+        proposalMapper.deleteById(proposalId);
     }
 
     @Override
-    public Proposal updateProposal(Integer id, Proposal proposal) {
-        proposal.setId(id);
+    public Proposal updateProposal(Integer proposalId, Proposal proposal) {
+        proposal.setProposalId(proposalId);
         proposalMapper.updateById(proposal);
         return proposal;
     }
