@@ -1,4 +1,4 @@
-package com.example.thesisbackend.service.impl.proposals;
+package com.example.thesisbackend.service.impl.proposal;
 
 import com.example.thesisbackend.mapper.ProposalMapper;
 import com.example.thesisbackend.pojo.Proposal;
