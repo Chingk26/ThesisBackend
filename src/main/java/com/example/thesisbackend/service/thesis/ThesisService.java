@@ -14,4 +14,5 @@ public interface ThesisService {
 
     void read(Integer thesisId, HttpServletResponse response) throws IOException;
 
+    Map<String, String> updateThesis(Integer studentId, String result);
 }

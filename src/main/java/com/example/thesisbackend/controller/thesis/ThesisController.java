@@ -38,4 +38,11 @@ public class ThesisController {
         thesisService.read(thesis_id,response);
     }
 
+    @PostMapping("/thesis/update")
+    public Map<String,String> updateThesis(@RequestParam Map<String,String> map){
+        Integer student_id = Integer.valueOf(map.get("student_id"));
+        String result=map.get("result");
+        return thesisService.updateThesis(student_id,result);
+    }
+
 }

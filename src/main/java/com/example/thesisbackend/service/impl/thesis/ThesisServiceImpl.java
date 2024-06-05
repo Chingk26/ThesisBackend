@@ -104,4 +104,23 @@ public class ThesisServiceImpl implements ThesisService {
         out.close();
     }
 
+    @Override
+    public Map<String, String> updateThesis(Integer studentId, String result) {
+        Map<String,String> map = new HashMap<>();
+        Thesis thesis=new Thesis();
+        thesis.setStudentId(studentId);
+        if(userMapper.selectById(studentId).getTeacherId()==null){
+            map.put("error_message", "您还没有导师，请先进行导师申请");
+            return map;
+        }
+        thesis.setTeacherId(userMapper.selectById(studentId).getTeacherId());
+        thesis.setResult(result);
+        thesis.setTeacherPass(0);
+        thesis.setDeanPass(0);
+        thesisMapper.updateById(thesis);
+        map.put("error_message", "success");
+        map.put("thesis_id", String.valueOf(thesis.getThesisId()));
+        return map;
+    }
+
 }
