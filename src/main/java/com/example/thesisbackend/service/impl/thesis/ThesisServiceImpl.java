@@ -1,13 +1,9 @@
 package com.example.thesisbackend.service.impl.thesis;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.example.thesisbackend.mapper.ApplicationMapper;
-import com.example.thesisbackend.mapper.TeacherMapper;
 import com.example.thesisbackend.mapper.ThesisMapper;
 import com.example.thesisbackend.mapper.UserMapper;
-import com.example.thesisbackend.pojo.Application;
 import com.example.thesisbackend.pojo.Thesis;
-import com.example.thesisbackend.pojo.User;
 import com.example.thesisbackend.service.thesis.ThesisService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,8 +15,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -30,16 +26,26 @@ public class ThesisServiceImpl implements ThesisService {
     @Autowired
     private UserMapper userMapper;
     @Override
-    public Map<String, String> addThesis(Integer studentId, String result) {
+    public Map<String, String> addThesis(Integer studentId, Float result, Integer version) {
         Map<String,String> map = new HashMap<>();
+        LocalDateTime localDateTime=LocalDateTime.now();
         Thesis thesis=new Thesis();
         thesis.setStudentId(studentId);
+        LocalDateTime start=userMapper.selectByAuthority(2).get(0).getStart();
+        LocalDateTime end=userMapper.selectByAuthority(2).get(0).getEnd();
+        if(localDateTime.isBefore(start)||localDateTime.isAfter(end)){
+            map.put("error_message","不在论文提交时间，无法上传");
+            return map;
+        }
         if(userMapper.selectById(studentId).getTeacherId()==null){
             map.put("error_message", "您还没有导师，请先进行导师申请");
             return map;
         }
         thesis.setTeacherId(userMapper.selectById(studentId).getTeacherId());
         thesis.setResult(result);
+        thesis.setStart(start);
+        thesis.setEnd(end);
+        thesis.setVersion(version);
         thesisMapper.insert(thesis);
         map.put("error_message", "success");
         map.put("thesis_id", String.valueOf(thesis.getThesisId()));
@@ -105,15 +111,25 @@ public class ThesisServiceImpl implements ThesisService {
     }
 
     @Override
-    public Map<String, String> updateThesis(Integer studentId, String result) {
+    public Map<String, String> updateThesis(Integer thesisId, Float result) {
         Map<String,String> map = new HashMap<>();
-        Thesis thesis=new Thesis();
-        thesis.setStudentId(studentId);
-        if(userMapper.selectById(studentId).getTeacherId()==null){
+        Thesis thesis=thesisMapper.selectById(thesisId);
+        LocalDateTime localDateTime=LocalDateTime.now();
+        if(thesis.getVersion()==2){
+            map.put("error_message","论文终稿不得修改");
+            return map;
+        }
+        if(localDateTime.isBefore(thesis.getStart())||localDateTime.isAfter(thesis.getEnd())){
+            map.put("error_message","不在论文提交时间，无法上传");
+            return map;
+        }
+        if(localDateTime.isAfter(thesis.getEnd().minusDays(7))||localDateTime.isAfter(thesis.getEnd())){
+
+        }
+        if(userMapper.selectById(thesis.getStudentId()).getTeacherId()==null){
             map.put("error_message", "您还没有导师，请先进行导师申请");
             return map;
         }
-        thesis.setTeacherId(userMapper.selectById(studentId).getTeacherId());
         thesis.setResult(result);
         thesis.setTeacherPass(0);
         thesis.setDeanPass(0);

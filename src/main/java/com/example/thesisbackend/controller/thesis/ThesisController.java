@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -20,8 +21,9 @@ public class ThesisController {
     @PostMapping("/thesis/add")
     public Map<String,String> addThesis(@RequestParam Map<String,String> map){
         Integer student_id = Integer.valueOf(map.get("student_id"));
-        String result=map.get("result");
-        return thesisService.addThesis(student_id,result);
+        Float result= Float.valueOf(map.get("result"));
+        Integer version=Integer.valueOf(map.get("version"));
+        return thesisService.addThesis(student_id,result,version);
     }
 
     @PostMapping("/thesis/uploadPdf")
@@ -40,9 +42,9 @@ public class ThesisController {
 
     @PostMapping("/thesis/update")
     public Map<String,String> updateThesis(@RequestParam Map<String,String> map){
-        Integer student_id = Integer.valueOf(map.get("student_id"));
-        String result=map.get("result");
-        return thesisService.updateThesis(student_id,result);
+        Integer thesis_id=Integer.valueOf(map.get("thesis_id"));
+        Float result= Float.valueOf(map.get("result"));
+        return thesisService.updateThesis(thesis_id,result);
     }
 
 }

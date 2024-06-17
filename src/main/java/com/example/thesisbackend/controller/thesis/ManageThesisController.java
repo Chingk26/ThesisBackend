@@ -28,6 +28,12 @@ public class ManageThesisController {
         return manageThesisService.refuseThesisByTeacher(thesis_id);
     }
 
+    @PostMapping("/react_by_teacher")
+    public Map<String,String> reactThesisByTeacher(@RequestParam Map<String,String> map){
+        Integer thesis_id = Integer.valueOf(map.get("thesis_id"));
+        return manageThesisService.reactThesisByTeacher(thesis_id);
+    }
+
     @PostMapping("/pass_by_dean")
     public Map<String,String> passThesisByDean(@RequestParam Map<String,String> map){
         Integer thesis_id = Integer.valueOf(map.get("thesis_id"));
@@ -38,5 +44,26 @@ public class ManageThesisController {
     public Map<String,String> refuseThesisByDean(@RequestParam Map<String,String> map){
         Integer thesis_id = Integer.valueOf(map.get("thesis_id"));
         return manageThesisService.refuseThesisByDean(thesis_id);
+    }
+
+    @PostMapping("/update_progress")
+    public Map<String,String> updateProgress(@RequestParam Map<String,String> map){
+        Integer thesis_id = Integer.valueOf(map.get("thesis_id"));
+        String progress=map.get("progress");
+        return manageThesisService.updateProgress(thesis_id,progress);
+    }
+
+    @PostMapping("/update_quality")
+    public Map<String,String> updateQuality(@RequestParam Map<String,String> map){
+        Integer thesis_id = Integer.valueOf(map.get("thesis_id"));
+        String quality=map.get("quality");
+        return manageThesisService.updateQuality(thesis_id,quality);
+    }
+
+    @PostMapping("/update_opinion")
+    public Map<String,String> updateOpinion(@RequestParam Map<String,String> map){
+        Integer thesis_id = Integer.valueOf(map.get("thesis_id"));
+        String opinion=map.get("opinion");
+        return manageThesisService.updateOpinion(thesis_id,opinion);
     }
 }

@@ -12,4 +12,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("select * from user where username=#{username}")
     List<User> selectByName(String username);
+
+    @Select("select * from user where authority=#{authority}")
+    List<User> selectByAuthority(Integer authority);
 }

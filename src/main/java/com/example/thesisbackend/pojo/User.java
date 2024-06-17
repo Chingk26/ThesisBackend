@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,4 +19,6 @@ public class User {
     private String password;
     private Integer authority;
     private Integer access;
+    private LocalDateTime start;
+    private LocalDateTime end;
 }

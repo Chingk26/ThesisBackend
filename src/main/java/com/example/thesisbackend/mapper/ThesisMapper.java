@@ -19,4 +19,7 @@ public interface ThesisMapper extends BaseMapper<Thesis> {
 
     @Select("select * from thesis where teacher_pass=#{teacherPass};")
     List<Thesis> selectByTeacherPass(Integer teacherPass);
+
+    @Select("select * from thesis;")
+    List<Thesis> selectAll();
 }

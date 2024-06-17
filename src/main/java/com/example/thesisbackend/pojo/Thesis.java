@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -16,14 +17,15 @@ public class Thesis {
     private Integer thesisId;
     private Integer studentId;
     private Integer teacherId;
-    private Date start;
-    private Date end;
+    private LocalDateTime start;
+    private LocalDateTime end;
     private Integer teacherPass;
     private Integer deanPass;
     private byte[] content;
     private String title;
-    private String result;
+    private Float result;
     private String progress;
     private String quality;
     private String opinion;
+    private Integer version;
 }

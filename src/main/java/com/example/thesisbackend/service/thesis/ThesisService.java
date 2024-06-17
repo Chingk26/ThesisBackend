@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.util.Map;
 
 public interface ThesisService {
-    Map<String, String> addThesis(Integer studentId, String result);
+    Map<String, String> addThesis(Integer studentId, Float result, Integer version);
 
     Map<String, String> uploadPdf(Integer thesisId, MultipartFile file, HttpServletRequest request);
 
     void read(Integer thesisId, HttpServletResponse response) throws IOException;
 
-    Map<String, String> updateThesis(Integer studentId, String result);
+    Map<String, String> updateThesis(Integer thesis_id, Float result);
 }
